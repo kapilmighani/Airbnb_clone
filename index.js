@@ -35,14 +35,22 @@ app.get('/', async(req, res) => {
     res.send("this is home root")
 })
 
+const validatelisting = (req, res, next ) => {
+    let {error} = listingSchema.validate(req.body);
+
+    if(error){
+        throw new ExpressError(400, error);
+    }else{
+        next();
+    }
+}
+
 app.get('/listings', wrapAsync ( async(req, res ) => {
     const listings = await listing.find({});
     res.render("listings/index.ejs", {listings})
 }));
 
-app.post('/listing/create', wrapAsync ( async(req, res, next) =>{
-    let result = listingSchema.validate(req.body);
-    console.log(result);
+app.post('/listing/create', validatelisting, wrapAsync ( async(req, res, next) =>{
     const newlisting = new listing(req.body.listing);
     await newlisting.save();
     res.redirect("/listings");
@@ -67,11 +75,7 @@ app.get('/listing/:id/edit', wrapAsync ( async(req, res ) => {
 
 }));
 
-app.put('/listing/:id', wrapAsync ( async (req, res) => {
-    if(!req.body.data) {
-        throw new ExpressError(404, "Send valid data for listing");
-    }
-    console.log("hwllo");
+app.put('/listing/:id', validatelisting, wrapAsync ( async (req, res) => {
     let {id} = req.params;
     await listing.findByIdAndUpdate(id, {...req.body.data});
     res.redirect(`/listing/${id}`);
