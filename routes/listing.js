@@ -4,17 +4,14 @@ const wrapAsync = require('../utils/wrapAsync.js');
 const {isLoggedIn, isOwner, validatelisting} = require('../middleware.js');
 const listingController = require('../controllers/listing.js');
 const multer = require('multer');
-const storage = require('../cloudConfig.js');
+const {storage} = require('../cloudConfig.js');
 const upload = multer({ storage });
 
 
 router
 .route('/')
 .get( wrapAsync (listingController.index))
-// .post(isLoggedIn, validatelisting, wrapAsync (listingController.createListing));
-.post( upload.single('listing[image][url]'), (req, res) => {
-    res.send(req.file);
-})
+.post(isLoggedIn, upload.single('listing[image][url]'), validatelisting, wrapAsync (listingController.createListing));
 
 //new Route
 router.get('/new',isLoggedIn, wrapAsync (listingController.renderNewForm));
@@ -23,7 +20,7 @@ router
 .route('/:id')
 .get(wrapAsync (listingController.showListing))
 .delete(isLoggedIn,isOwner, wrapAsync (listingController.deleteListing))
-.put(isLoggedIn,isOwner, validatelisting, wrapAsync (listingController.updateListing));
+.put(isLoggedIn,isOwner, upload.single('listing[image][url]'), validatelisting, wrapAsync (listingController.updateListing));
 
 //edite route
 router.get('/:id/edit',isLoggedIn,isOwner, wrapAsync (listingController.renderEditeForm));
