@@ -52,9 +52,9 @@ const sessionOptions = {
     }
 };
 
-app.get('/', async(req, res) => {
-    res.send("this is home root")
-})
+// app.get('/', async(req, res) => {
+//     res.send("this is home root")
+// })
 
 app.use(session(sessionOptions));
 app.use(flash());
