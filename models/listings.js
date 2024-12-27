@@ -28,6 +28,10 @@ const listingSchema = new mongoose.Schema({
       type: Schema.Types.ObjectId,
       ref: "User"
     },
+    category: {
+      type: String,
+      enum: ["Trending", "Rooms", "Iconic Cities", "Mountain", "Castles", "Amazing Pools", "Camping", "Farms", "Arctic", "Boat", "Doms"]
+    },
     geometry: {
       type: {
         type: String, // Don't do `{ location: { type: String } }`
