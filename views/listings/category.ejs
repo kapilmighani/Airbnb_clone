@@ -1,0 +1,47 @@
+<% layout("layouts/boilerplate") %>
+<style>
+  .listing-card {
+    margin-bottom: 1.5rem;
+  }
+
+  .listing-card img {
+    height: 20rem;
+    object-fit: cover;
+  }
+</style>
+
+<!-- Category Heading -->
+<h1>Listings in <%= selectedCategory %> Category</h1>
+
+<!-- Category Filter Buttons -->
+<div id="filters">
+  <% categories.forEach(category => { %>
+    <div class="filter">
+      <a href="/category/<%= category %>">
+        <div><i class="fa-solid fa-fire"></i></div>
+        <p><%= category %></p>
+      </a>
+    </div>
+  <% }) %>
+</div>
+
+<!-- Listings Section -->
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+  <% if (listings.length === 0) { %>
+    <p>No listings available in this category.</p>
+  <% } else { %>
+    <% for (let list of listings) { %>
+      <a href="/listings/<%= list._id %>" class="listing-link">
+        <div class="card col listing-card">
+          <img src="<%= list.image.url %>" class="card-img-top" alt="listing-image">
+          <div class="card-body">
+            <p class="card-text">
+              <b><%= list.title %></b><br>
+              &#8377;<%= list.price %> / night
+            </p>
+          </div>
+        </div>
+      </a>
+    <% } %>
+  <% } %>
+</div>
